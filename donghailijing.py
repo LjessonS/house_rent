@@ -8,12 +8,7 @@ Created on 2018年1月5日
 import os
 import datetime
 import shelve
-# import ipdb
-# 
-# with shelve.open('fee.db') as db:
-#     ipdb.set_trace()
-#     db['electron'] =  db['electron'][:-1]
-#     db['water'] =  db['water'][:-1]
+import sys
     
     
 if not os.path.exists('fee.db.dat'):
@@ -91,6 +86,8 @@ if __name__ == '__main__':
 #         totalRent(electriUse, waterUse)
 #          
 #     if len(ini) == 0:
+    script_path = os.path.split(os.path.abspath(sys.argv[0]))[0]
+    print("script_path: %s" % script_path)
     electriThis = float(input('输入这个月的电表度数：\n'))
     waterThis = float(input('输入这个月的水表度数：\n'))
     print('\n')
@@ -98,12 +95,13 @@ if __name__ == '__main__':
     totalRent(electriThis, waterThis)
     
     save = input("是否保存这个月的数据,输入是'y'保存，按回车不保存\n")
+    shelve_db_path = os.path.join(script_path, 'fee.db')
     if len(save) != 0:
-        with shelve.open('fee.db') as db:
+        with shelve.open(shelve_db_path) as db:
             db['electron'] = db['electron'] + [electriThis]
             db['water'] = db['water'] + [waterThis]
 
-    with shelve.open('fee.db') as db:
+    with shelve.open(shelve_db_path) as db:
         print('electron:', db['electron'])
         print('water:', db['water'])
         print('\n\n\n')
